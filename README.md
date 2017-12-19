@@ -1,2 +1,2 @@
 # fs-metrology
-Popper repository for a Metrology of trace-based file system measurements paper
+This a Popper repository for the paper Metrology of trace-based file system measurements
