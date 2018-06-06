@@ -1,17 +1,12 @@
 #!/bin/bash
 
 #get the code
-wget https://github.com/thiagomanel/fs-microbench/archive/master.zip
-
-#copy-it to the correct place
-rm -rf /tmp/fs-microbench-master
-cp fs-microbench-master.zip /tmp/
-unzip /tmp/fs-microbench-master.zip
+rm -rf /tmp/fs-microbench
+#I was using an old linux box that failed to curl and wget from github because was using an outdated openssl
+git clone https://github.com/thiagomanel/fs-microbench.git /tmp/fs-microbench
 
 #compile the code
-cd /tmp/fs-microbench-master/src/
-make
-cd -
+make -C /tmp/fs-microbench/src/
 
 #configure the tests
-#TODO: do we really need it or just drop values at run
+#TODO: do we really need it or just drop values at run?
