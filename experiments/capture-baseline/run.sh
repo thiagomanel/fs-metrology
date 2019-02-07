@@ -4,12 +4,9 @@
 # by the 'popper check' command.
 set -e
 
-# add commands here:
-
 #force deleting any previous results
-rm -rf results/baseline_output
-
-mkdir -p results/baseline_output
+#rm -rf results/baseline_output
+#mkdir -p results/baseline_output
 
 env_fullpath=$(realpath environment.conf)
 

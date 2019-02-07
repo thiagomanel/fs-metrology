@@ -11,7 +11,7 @@ if [ -n "$REMOTE" ]; then
     setup/remote.sh
 else
     # setup a local env
-    setup/local.sh
+    setup/local.sh $(realpath environment.conf)
 fi
 
 exit 0

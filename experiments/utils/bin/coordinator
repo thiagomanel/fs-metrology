@@ -44,9 +44,8 @@ foreground() {
    outpath=$base_out".out"
    errpath=$base_out".err"
 
-   workload_dir=$CAPTURE_HOME
-   #FIXME: check paths
-   foreground_cmd="$workload_dir/${workload} $nfg 0 5000 /local2/metrology/target/big_file $bs no-debug"
+   workload_dir=$WORKLOADGEN_BASEDIR/fs-microbench/src
+   foreground_cmd="$workload_dir/${workload} $nfg 0 5000 $FOREGROUND_INPUT/big_file $bs debug"
 
    case "$trace_tool" in
 	baseline)
@@ -154,7 +153,7 @@ execute() {
 
 	echo "start load"
 	sleep 5
-	#foreground $workload $trace_tool $baseout $nforeground $nbackground $bsize;
+	foreground $workload $trace_tool $baseout $nforeground $nbackground $bsize;
 
 	sleep 5
 	echo "kill background"
