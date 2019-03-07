@@ -14,10 +14,13 @@ env_fullpath=$(realpath environment.conf)
 tool="baseline"
 for wld in seqr rr
 do
-    for i in `seq 1 10`
-    do
-	echo "run sample" $i
-	../utils/bin/coordinator --env $env_fullpath -w $wld --nforeground 1 --nbackground 0 --trace_tool $tool --bsize 4096
+    for nfg in 1 2 3 4
+    do 
+        for i in `seq 1 50`
+        do
+            echo "run sample" $i
+            ../utils/bin/coordinator --env $env_fullpath -w $wld --nforeground $nfg --nbackground 0 --trace_tool $tool --bsize 4096
+        done
     done
 done
 
