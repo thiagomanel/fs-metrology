@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
@@ -30,7 +30,8 @@ background() {
 }
 
 killall_background() {
-	killall -q "background"
+	out_kill=$(killall -9 "background")
+	echo "after killing" $out_kill
 }
 
 foreground() {
@@ -57,7 +58,7 @@ foreground() {
 		;;
 	strace)
 		strace_out=$base_out".strace"
-		strace -f -q -t -ttt -T -e signal=none -e trace=open,read,write,pread64,pwrite64,pwrite,pread,stat,lseek,close -o $strace_out -f $foreground_cmd > $outpath 2> $errpath
+		strace -f -q -t -ttt -T -e signal=none -e trace=open,read,write,pread64,pwrite64,stat,lseek,close -o $strace_out -f $foreground_cmd > $outpath 2> $errpath
 		;;
 	*)
 		echo $"Unknown command: $trace_tool {baseline|stap|strace}"
@@ -158,6 +159,7 @@ execute() {
 	sleep 5
 	echo "kill background"
 	killall_background
+	echo "kill done"
 }
 
 main() {
