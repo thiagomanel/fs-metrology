@@ -1,0 +1,163 @@
+BEGIN {
+  printf("#begin\n");
+}
+
+// "open", tid, begin, end, delta, filename, return, execname
+tracepoint:syscalls:sys_enter_open
+/ comm == "rr" || comm == "rw" || comm == "seqr" || comm == "seqw" /
+{
+  @open[tid]     = nsecs;
+  @openfile[tid] = str(args->filename);
+}
+
+tracepoint:syscalls:sys_exit_open
+/ @open[tid] != 0 /
+{
+  $now      = nsecs;
+  $begin    = @open[tid];
+  $delta    = $now - $begin;
+  $filename = @openfile[tid];
+
+  printf("%s %ld %ld %ld %ld ", "open", tid, $begin, $now, $delta);
+  printf("%s %d %s\n", $filename, args->ret, comm);
+
+  delete(@open[tid]);
+  delete(@openfile[tid]);
+}
+
+// "read", tid, begin, end, delta, count, fd, return, execname
+tracepoint:syscalls:sys_enter_read
+/ comm == "rr" || comm == "rw" || comm == "seqr" || comm == "seqw" /
+{
+  @read[tid]    = nsecs;
+  @readfd[tid]  = args->fd;
+  @readcnt[tid] = args->count;
+}
+
+tracepoint:syscalls:sys_exit_read
+/ @read[tid] != 0 /
+{
+  $now   = nsecs;  
+  $begin = @read[tid];
+  $delta = $now - $begin;
+  $count = @readcnt[tid];
+  $fd    = @readfd[tid];
+  
+  printf("%s %ld %ld %ld %ld ", "read", tid, $begin, $now, $delta);
+  printf("%lu %lu %d %s\n", $count, $fd, args->ret, comm);
+
+  delete(@read[tid]);
+  delete(@readfd[tid]);
+  delete(@readcnt[tid]);
+}
+
+// "write", tid, begin, end, delta, count, fd, return, execname
+tracepoint:syscalls:sys_enter_write
+/ comm == "rr" || comm == "rw" || comm == "seqr" || comm == "seqw" /
+{
+  @write[tid]    = nsecs;
+  @writefd[tid]  = args->fd;
+  @writecnt[tid] = args->count;
+}
+
+tracepoint:syscalls:sys_exit_write
+/ @write[tid] != 0 /
+{
+  $now   = nsecs;
+  $begin = @write[tid];
+  $delta = $now - $begin;
+  $count = @writecnt[tid];
+  $fd    = @writefd[tid];
+
+  printf("%s %ld %ld %ld %ld ", "write", tid, $begin, $now, $delta);
+  printf("%lu %lu %d %s\n", $count, $fd, args->ret, comm);
+
+  delete(@write[tid]);
+  delete(@writefd[tid]);
+  delete(@writecnt[tid]);
+}
+
+// “sys_pread64”, tid, begin, end, delta, fd, count, pos, return, execname
+tracepoint:syscalls:sys_enter_pread64 
+/ comm == "rr" || comm == "rw" || comm == "seqr" || comm == "seqw" /
+{
+  @pread[tid]    = nsecs;
+  @preadfd[tid]  = args->fd;
+  @preadcnt[tid] = args->count;
+  @preadpos[tid] = args->pos;
+}
+
+tracepoint:syscalls:sys_exit_pread64
+/ @pread[tid] != 0/
+{
+  $now   = nsecs;
+  $begin = @pread[tid];
+  $delta = $now - $begin;
+  $fd    = @preadfd[tid];
+  $count = @preadcnt[tid];
+  $pos   = @preadpos[tid];
+  
+  printf("%s %ld %ld %ld %ld ", "sys_pread64", tid, $begin, $now, $delta);
+  printf("%ld %ld %ld %d %s\n", $fd, $count, $pos, args->ret, comm);
+
+  delete(@pread[tid]);
+  delete(@preadfd[tid]);
+  delete(@preadcnt[tid]);
+  delete(@preadpos[tid]);
+}
+
+// “sys_pread64”, tid, begin, end, delta, fd, count, pos, return, execname
+tracepoint:syscalls:sys_enter_pwrite64 
+/ comm == "rr" || comm == "rw" || comm == "seqr" || comm == "seqw" /
+{
+  @pwrite[tid]    = nsecs;
+  @pwritefd[tid]  = args->fd;
+  @pwritecnt[tid] = args->count;
+  @pwritepos[tid] = args->pos;
+}
+
+tracepoint:syscalls:sys_exit_pwrite64
+/ @pwrite[tid] != 0/
+{
+  $now   = nsecs;
+  $begin = @pwrite[tid];
+  $delta = $now - $begin;
+  $fd    = @pwritefd[tid];
+  $count = @pwritecnt[tid];
+  $pos   = @pwritepos[tid];
+  
+  printf("%s %ld %ld %ld %ld ", "sys_pwrite64", tid, $begin, $now, $delta);
+  printf("%ld %ld %ld %d %s\n", $fd, $count, $pos, args->ret, comm);
+
+  delete(@pwrite[tid]);
+  delete(@pwritefd[tid]);
+  delete(@pwritecnt[tid]);
+  delete(@pwritepos[tid]);
+}
+
+END
+{
+  printf("#end\n");
+  // clear open
+  clear(@open);
+  clear(@openfile);
+  // clear read
+  clear(@read);
+  clear(@readfd);
+  clear(@readcnt);
+  // clear write
+  clear(@write);
+  clear(@writefd);
+  clear(@writecnt);
+  // clear pread
+  clear(@pread);
+  clear(@preadfd);
+  clear(@preadcnt);
+  clear(@preadpos);
+  // clear pwrite
+  clear(@pwrite);
+  clear(@pwritefd);
+  clear(@pwritecnt);
+  clear(@pwritepos);
+}
+
