@@ -30,6 +30,7 @@ ctrl_c() {
 # run
 trap ctrl_c INT
 echo "capture started, press [^C] to stop" 1>&2
-perf record -e $evts --filter $filter
+echo "perf record -e $evts --filter $filter"
+# perf record -e $evts --filter $filter
 
 

@@ -63,11 +63,15 @@ foreground() {
 	bpftrace)
 		;;
 	perf)
+		perf_out=$base_out".perf"
+		perf_evts="syscalls:sys_enter_open,syscalls:sys_exit_open,syscalls:sys_enter_read,syscalls:sys_exit_read,syscalls:sys_enter_write,syscalls:sys_exit_write,syscalls:sys_enter_pread64,syscalls:sys_exit_pread64,syscalls:sys_enter_pwrite64,syscalls:sys_exit_pwrite64"
+		perf record -e $perf_evts --filter "comm==rr||comm==rw||comm==seqr||comm==seqw" sh -c "$foreground_cmd > $outpath 2> $errpath"
+		perf script -i perf.data > $perf_out
 		;;
 	ftrace)
 		;;
 	*)
-		echo $"Unknown command: $trace_tool {baseline|stap|strace}"
+		echo $"Unknown command: $trace_tool {baseline|stap|strace|perf}"
 		exit 1
    esac
 }
