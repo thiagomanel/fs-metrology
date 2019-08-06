@@ -60,6 +60,12 @@ foreground() {
 		strace_out=$base_out".strace"
 		strace -f -q -t -ttt -T -e signal=none -e trace=open,read,write,pread64,pwrite64,stat,lseek,close -o $strace_out -f $foreground_cmd > $outpath 2> $errpath
 		;;
+	bpftrace)
+		;;
+	perf)
+		;;
+	ftrace)
+		;;
 	*)
 		echo $"Unknown command: $trace_tool {baseline|stap|strace}"
 		exit 1
