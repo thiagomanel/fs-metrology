@@ -65,9 +65,11 @@ foreground() {
 	perf)
 		;;
 	ftrace)
+		ftrace_out=$base_out".ftrace"
+		../utils/tracers/ftrace.sh -o $ftrace_out -r $outpath -e $errpath $foreground_cmd
 		;;
 	*)
-		echo $"Unknown command: $trace_tool {baseline|stap|strace}"
+		echo $"Unknown command: $trace_tool {baseline|stap|strace|ftrace}"
 		exit 1
    esac
 }

@@ -1,6 +1,35 @@
-#!/bin/sh
+#!/bin/bash
 
-pids=$@
+OUTPUT=/dev/stdout
+OUTCOMM=/dev/stdout
+ERRCOMM=/dev/stderr
+
+while [ "$1" != "" ]; do
+    case $1 in
+
+        -o | --stdout)
+            shift;
+            OUTPUT=$1;
+        ;;
+
+        -e | --command-stderr)
+            shift;
+            ERRCOMM=$1;
+        ;;
+
+        -r | --redirect | --command-stdout)
+            shift;
+            OUTCOMM=$1;
+        ;;
+
+        *)
+            COMMAND=$@;
+            shift $#;
+        ;;
+
+    esac
+    shift
+done
 
 _enter() {
     echo "syscalls:sys_enter_$1"
@@ -42,16 +71,15 @@ echo $evts > $EVTFILE
 
 #~~~~running~~~~#
 echo 1 > $ONOFF
-echo "capture started, press [RETURN] to stop" 1>&2
-read -r  _ </dev/tty
+$COMMAND > $OUTCOMM 2> $ERRCOMM
+echo 0 > $ONOFF
 
 #~~~~end~~~~#
 
-echo 0 > $ONOFF
 echo   > $EVTFILE       # clear changed
 echo 0 > $FILTERFILE    # configurations
 
 #~~~~output~~~~#
-echo "#begin"
-cat $TRACE | grep -v ^\#    # ignore ftrace header
-echo "#end"
+echo "#begin"               > $OUTPUT
+cat $TRACE | grep -v ^\#    >> $OUTPUT # ignore ftrace header
+echo "#end"                 >> $OUTPUT
