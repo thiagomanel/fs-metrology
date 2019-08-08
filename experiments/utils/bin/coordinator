@@ -61,6 +61,8 @@ foreground() {
 		strace -f -q -t -ttt -T -e signal=none -e trace=open,read,write,pread64,pwrite64,stat,lseek,close -o $strace_out -f $foreground_cmd > $outpath 2> $errpath
 		;;
 	bpftrace)
+		bpftrace_out=$base_out".bpftrace"
+		(bpftrace ../utils/tracers/bpftrace.bt -o $bpftrace_out -c $foreground_cmd) > $outpath 2> $errpath
 		;;
 	perf)
 		perf_out=$base_out".perf"

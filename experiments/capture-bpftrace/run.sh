@@ -11,13 +11,12 @@ set -e
 env_fullpath=$(realpath environment.conf)
 
 #invoke the exp
-tool="strace"
+tool="bpftrace"
 for wld in seqr rr
 do
-    #for nfg in 1 2 3 4
-    for nfg in 1
+    for nfg in 1 2 3 4
     do 
-        for i in `seq 1 1`
+        for i in `seq 1 50`
         do
             echo "run sample" $i
             ../utils/bin/coordinator --env $env_fullpath -w $wld --nforeground $nfg --nbackground 0 --trace_tool $tool --bsize 4096
