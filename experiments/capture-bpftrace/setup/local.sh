@@ -24,7 +24,7 @@ sudo apt-get install -y llvm-7-dev llvm-7-runtime libclang-7-dev clang-7
 ##install bcc-tools
 echo "deb [trusted=yes] https://repo.iovisor.org/apt/xenial xenial-nightly main" | sudo tee /etc/apt/sources.list.d/iovisor.list
 sudo apt-get update
-sudo apt-get install -y bpfcc-tools	# or the old package name: bcc-tools
+sudo apt-get install -y bcc-tools	# or the new package name: bpfcc-tools
 
 #p/ ubuntu 16 (fixes some broken includes, see https://github.com/iovisor/bpftrace/issues/507): 
 sudo cp /usr/include/bcc/BPF.h  /usr/include/bcc/BPF.h.copy
