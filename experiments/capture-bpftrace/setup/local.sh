@@ -17,6 +17,7 @@ sudo apt-add-repository 'deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-7
 
 ##install bpftrace dependencies
 sudo apt-get update
+sudo apt-get install -y apt-utils
 sudo apt-get install -y bison cmake flex g++ git libelf-dev zlib1g-dev libfl-dev systemtap-sdt-dev
 sudo apt-get install -y llvm-7-dev llvm-7-runtime libclang-7-dev clang-7
 
